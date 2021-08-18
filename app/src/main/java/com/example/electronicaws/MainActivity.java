@@ -110,8 +110,10 @@ public class MainActivity extends AppCompatActivity {
 
                 if(response.equals("ERROR 1")) {
                     Toast.makeText(MainActivity.this, "Se deben de llenar todos los campos.", Toast.LENGTH_SHORT).show();
+                    limpiar();
                 } else if(response.equals("ERROR 2")) {
                     Toast.makeText(MainActivity.this, "No existe ese registro.", Toast.LENGTH_SHORT).show();
+                    limpiar();
                 } else if(response.equals("ERROR 3")){
                     Intent intent = new Intent (MainActivity.this, ListaActivity.class);
                     limpiar();
