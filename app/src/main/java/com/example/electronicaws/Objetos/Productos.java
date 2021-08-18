@@ -8,16 +8,8 @@ public class Productos implements Serializable {
     private String marca;
     private String descripcion;
     private String foto;
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
-
     private double precio;
+
 
     public Productos() {
     }
@@ -60,5 +52,13 @@ public class Productos implements Serializable {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 }

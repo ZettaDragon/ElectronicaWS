@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,10 +31,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Hashtable;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 public class MainActivity extends AppCompatActivity {
     EditText txtUsuario, txtPass;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private JsonObjectRequest jsonObjectRequest;
     private Usuario usuario;
     private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+    private String pass;
 
 
     @Override
@@ -74,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if(completo)
                     {
-                        String url = serverip + "wsConsultarUsuarios.php?usuario=" + txtUsuario.getText().toString() + "&pass=" + txtPass.getText().toString();
-                        login(url);
+                            String url = serverip + "wsConsultarUsuarios.php?usuario=" + txtUsuario.getText().toString() + "&pass=" + txtPass.getText().toString();
+                            login(url);
                     }
                 }
             }
@@ -149,5 +155,6 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         requestQueue.add(stringRequest);
     }
+
 
 }
