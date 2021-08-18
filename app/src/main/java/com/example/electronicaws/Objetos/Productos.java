@@ -3,18 +3,21 @@ package com.example.electronicaws.Objetos;
 import java.io.Serializable;
 
 public class Productos implements Serializable {
+
     private int _ID;
     private String marca;
     private String descripcion;
-    private String fotos;
+    private String foto;
 
-    public Productos(){}
-
-    public Productos(String marca, String descripcion, String fotos) {
-        this.descripcion = descripcion;
-        this.marca = marca;
-        this.fotos = fotos;
+    public Productos() {
     }
+
+    public Productos(String marca, String descripcion, String foto) {
+        this.setMarca(marca);
+        this.setDescripcion(descripcion);
+        this.setFoto(foto);
+    }
+
 
     public int get_ID() {
         return _ID;
@@ -40,13 +43,11 @@ public class Productos implements Serializable {
         this.descripcion = descripcion;
     }
 
-
-    public String getFotos() {
-        return fotos;
+    public String getFoto() {
+        return foto;
     }
 
-    public void setFotos(String fotos) {
-        this.fotos = fotos;
-
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }
