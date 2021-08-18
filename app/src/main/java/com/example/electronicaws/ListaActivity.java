@@ -3,8 +3,10 @@ package com.example.electronicaws;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -39,6 +42,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
     private JsonObjectRequest jsonObjectRequest;
     private ArrayList<Productos> listaProductos;
     private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,17 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
             lblPrecio.setText("$" + p);
             foto.setImageURI(Uri.parse(objects.get(position).getFoto()));
 
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle oBundle = new Bundle();
+                    oBundle.putSerializable("producto", objects.get(position));
+                    Intent i = new Intent();
+                    i.putExtras(oBundle);
+                    setResult(Activity.RESULT_OK, i);
+                    finish();
+                }
+            });
             return view;
         }
 

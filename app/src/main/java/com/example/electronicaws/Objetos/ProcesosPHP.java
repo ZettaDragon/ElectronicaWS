@@ -33,7 +33,7 @@ public class ProcesosPHP implements Response.Listener<JSONObject>, Response.Erro
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url,null,this,this);
         requestQueue.add(jsonObjectRequest);
     }
-    public void borrarProductosWS(Productos p,int id)
+    public void borrarProductosWS(int id)
     {
         String url = serverip + "wsEliminarProductos.php=_ID=" + id;
         Log.i("url",url);

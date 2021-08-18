@@ -19,8 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lblTitulo"
-            android:text="Marca"
-            android:layout_marginTop="50dp">
+            android:text="Marca">
         </TextView>
 
         <EditText
@@ -85,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Guardar"
-                    android:id="@+id/btnSalir"
+                    android:id="@+id/btnGuardar"
                     android:layout_marginStart="5dp"
                     android:layout_span="2"/>
             </TableRow>
