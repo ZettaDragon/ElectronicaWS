@@ -111,6 +111,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
             TextView lblDescripcion = (TextView) view.findViewById(R.id.lblDescripcion);
             TextView lblPrecio = (TextView) view.findViewById(R.id.lblPrecio);
             ImageView foto = (ImageView) view.findViewById(R.id.imgFoto);
+            Button btnVer = (Button) view.findViewById(R.id.btnVer);
 
             lblMarca.setText(objects.get(position).getMarca());
             lblDescripcion.setText(objects.get(position).getDescripcion());
@@ -119,7 +120,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
             lblPrecio.setText("$" + p);
             foto.setImageURI(Uri.parse(objects.get(position).getFoto()));
 
-            view.setOnClickListener(new View.OnClickListener() {
+            btnVer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle oBundle = new Bundle();
