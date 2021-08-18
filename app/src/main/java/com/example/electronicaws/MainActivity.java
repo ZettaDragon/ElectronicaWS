@@ -111,15 +111,19 @@ public class MainActivity extends AppCompatActivity {
                 if(response.equals("ERROR 1")) {
                     Toast.makeText(MainActivity.this, "Se deben de llenar todos los campos.", Toast.LENGTH_SHORT).show();
                     limpiar();
-                } else if(response.equals("ERROR 2")) {
+                } else if(response.equals("ERROR 3")) {
                     Toast.makeText(MainActivity.this, "No existe ese registro.", Toast.LENGTH_SHORT).show();
                     limpiar();
-                } else if(response.equals("ERROR 3")){
+                } else if(response.equals("Exito")){
                     Intent intent = new Intent (MainActivity.this, ListaActivity.class);
                     limpiar();
                     startActivity(intent);
                     Log.i("respuesta",response);
                     Toast.makeText(MainActivity.this, "Inicio de Sesion exitoso.", Toast.LENGTH_LONG).show();
+                }else
+                {
+                    Toast.makeText(MainActivity.this, "Contraseña o usuario incorrectos", Toast.LENGTH_SHORT).show();
+                    limpiar();
                 }
 
             }
