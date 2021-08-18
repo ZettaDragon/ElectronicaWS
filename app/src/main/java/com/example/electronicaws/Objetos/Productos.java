@@ -9,13 +9,24 @@ public class Productos implements Serializable {
     private String descripcion;
     private String foto;
 
+    public long getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(long precio) {
+        this.precio = precio;
+    }
+
+    private long precio;
+
     public Productos() {
     }
 
-    public Productos(String marca, String descripcion, String foto) {
+    public Productos(String marca, String descripcion, String foto, long precio) {
         this.setMarca(marca);
         this.setDescripcion(descripcion);
         this.setFoto(foto);
+        this.setPrecio(precio);
     }
 
 

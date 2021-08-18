@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/lblTitulo"
             android:text="Marca"
-            android:layout_marginTop="80dp">
+            android:layout_marginTop="50dp">
         </TextView>
 
         <EditText
@@ -40,6 +40,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtDescripcion">
+        </EditText>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lblPrecio"
+            android:text="Precio">
+        </TextView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtPrecio">
         </EditText>
 
         <ImageView

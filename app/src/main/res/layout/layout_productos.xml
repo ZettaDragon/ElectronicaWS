@@ -70,6 +70,16 @@
                     android:textStyle="bold">
                 </TextView>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lblPrecio"
+                    android:layout_marginBottom="2dp"
+                    android:text="Precio"
+                    android:textColor="@color/black"
+                    android:textStyle="bold">
+                </TextView>
+
             </LinearLayout>
 
         </RelativeLayout>
