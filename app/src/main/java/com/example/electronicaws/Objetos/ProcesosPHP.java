@@ -27,7 +27,7 @@ public class ProcesosPHP implements Response.Listener<JSONObject>, Response.Erro
     //Procesos PHP para los productos
     public void actualizarProductoWS(Productos p, int id)
     {
-        String url = serverip + "wsActualizarProductos.php?_ID=" + id + "&marca=" + p.getMarca() + "&descripcion=" + p.getDescripcion() + "&foto=" + p.getFotos();
+        String url = serverip + "wsActualizarProductos.php?_ID=" + id + "&marca=" + p.getMarca() + "&descripcion=" + p.getDescripcion() + "&foto=" + p.getFoto();
         url = url.replace("","%20");
         Log.i("url",url);
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url,null,this,this);
