@@ -75,7 +75,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
                 productos.setMarca(jsonObject.optString("marca"));
                 productos.setDescripcion(jsonObject.optString("descripcion"));
                 productos.setFoto(jsonObject.optString("foto"));
-                productos.setPrecio(jsonObject.optLong("precio"));
+                productos.setPrecio(jsonObject.optDouble("precio"));
                 listaProductos.add(productos);
             }
             MyArrayAdapter adapter = new MyArrayAdapter(context,R.layout.layout_productos,listaProductos);
@@ -103,14 +103,14 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(this.textViewRecursoId, null);
 
-            TextView lblMarca = (TextView) findViewById(R.id.lblTitulo);
-            TextView lblDescripcion = (TextView) findViewById(R.id.lblDescripcion);
-            TextView lblPrecio = (TextView) findViewById(R.id.lblPrecio);
-            ImageView foto = (ImageView) findViewById(R.id.imgFoto);
+            TextView lblMarca = (TextView) view.findViewById(R.id.lblTitulo);
+            TextView lblDescripcion = (TextView) view.findViewById(R.id.lblDescripcion);
+            TextView lblPrecio = (TextView) view.findViewById(R.id.lblPrecio);
+            ImageView foto = (ImageView) view.findViewById(R.id.imgFoto);
 
             lblMarca.setText(objects.get(position).getMarca());
             lblDescripcion.setText(objects.get(position).getDescripcion());
-            lblPrecio.setText((int) objects.get(position).getPrecio());
+           // lblPrecio.setText((int) objects.get(position).getPrecio());
             foto.setImageURI(Uri.parse(objects.get(position).getFoto()));
 
             return view;
