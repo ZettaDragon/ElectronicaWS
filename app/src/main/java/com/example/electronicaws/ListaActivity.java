@@ -111,6 +111,8 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
             lblMarca.setText(objects.get(position).getMarca());
             lblDescripcion.setText(objects.get(position).getDescripcion());
            // lblPrecio.setText((int) objects.get(position).getPrecio());
+            String p = String.valueOf(objects.get(position).getPrecio());
+            lblPrecio.setText(p);
             foto.setImageURI(Uri.parse(objects.get(position).getFoto()));
 
             return view;
