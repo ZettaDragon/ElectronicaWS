@@ -125,7 +125,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
                 public void onClick(View v) {
                     Bundle oBundle = new Bundle();
                     oBundle.putSerializable("producto", objects.get(position));
-                    Intent i = new Intent();
+                    Intent i = new Intent(context,ItemSeleccionado.class);
                     i.putExtras(oBundle);
                     setResult(Activity.RESULT_OK, i);
                     finish();

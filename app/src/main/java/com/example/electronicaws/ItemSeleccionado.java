@@ -77,6 +77,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         if (isNetworkAvailable()){
             switch (v.getId()){
                 case R.id.btnGuardar:
+
                     Productos po = new Productos();
                     po.setMarca(txtMarca.getText().toString());
                     po.setDescripcion(txtDescripcion.getText().toString());
@@ -140,8 +141,12 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
                 id = p.get_ID();
                 txtMarca.setText(p.getMarca());
                 txtDescripcion.setText(p.getDescripcion());
-                txtPrecio.setText((int) p.getPrecio());
+                String pre = String.valueOf(p.getPrecio());
+                txtPrecio.setText(pre);
                 imageView.setImageURI(Uri.parse(p.getFoto()));
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         }
     }
