@@ -8,10 +8,13 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +23,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.electronicaws.Objetos.ProcesosPHP;
 import com.example.electronicaws.Objetos.Productos;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class ItemSeleccionado extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,18 +58,18 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     ProcesosPHP php;
     private int id;
     private Uri imgUri;
-    private String msg = "Entro a esta parte";
+    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_seleccionado);
-        Log.i("mensaje de inicio",msg);
         iniciar();
         setEvents();
     }
 
-    public void iniciar(){
+    public void iniciar() {
         this.php = new ProcesosPHP();
         php.setContext(this);
         txtMarca = findViewById(R.id.txtMarca);
@@ -62,6 +82,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         btnListar = findViewById(R.id.btnRegresar);
         savedProductos = null;
     }
+
     public void setEvents() {
         btnImagen.setOnClickListener(this);
         btnBorrar.setOnClickListener(this);
@@ -69,21 +90,23 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         btnListar.setOnClickListener(this);
     }
 
-        @Override
+    @Override
     public void onClick(View v) {
-        if (isNetworkAvailable()){
-            switch (v.getId()){
+        if (isNetworkAvailable()) {
+            switch (v.getId()) {
                 case R.id.btnGuardar:
-
-                    Productos po = new Productos();
-                    po.setMarca(txtMarca.getText().toString());
-                    po.setDescripcion(txtDescripcion.getText().toString());
-                    po.setPrecio(Double.parseDouble(txtPrecio.getText().toString()));
-                    po.setFoto(convert());
-
-                    if (savedProductos != null){
-                        php.actualizarProductoWS(po,id);
-                        Toast.makeText(getApplicationContext(), "Actualizado", Toast.LENGTH_SHORT).show();
+                    if (savedProductos != null) {
+                        String imagen = getStringImagen(bitmap);
+                        //String url = serverip + "wsActualizarProductos.php?_ID=" + id + "&marca=" + txtMarca.getText().toString() + "&descripcion=" + txtDescripcion.getText().toString() + "&foto=" + imagen+ "&precio=" +txtPrecio.getText().toString();
+                        String url = serverip + "wsActualizarProductos.php";
+                        try {
+                            actualizar(url);
+                        } catch (JSONException e) {
+                            Log.i("URL",url);
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Debe seleccionar un registro primero", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.btnBorrar:
@@ -114,14 +137,14 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
                     break;
                 case R.id.btnRegresar:
                     Intent i = new Intent(ItemSeleccionado.this, ListaActivity.class);
-                    startActivityForResult(i,0);
+                    startActivityForResult(i, 0);
                     break;
                 case R.id.btnSelectFoto:
-                    //openGalery();
+                    cargarimg();
                     break;
 
             }
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(), "Se necesita tener conexion a internet", Toast.LENGTH_SHORT).show();
         }
     }
@@ -132,8 +155,42 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         return ni != null && ni.isConnected();
     }
 
-    private void limpiar()
-    {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 2) {
+            Uri filePath = intent.getData();
+            //Cómo obtener el mapa de bits de la Galería
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //Configuración del mapa de bits en ImageView
+            imageView.setImageBitmap(bitmap);
+        } else {
+            if (intent != null) {
+                Bundle bundle = intent.getExtras();
+                if (resultCode == Activity.RESULT_OK) {
+                    Productos p = (Productos) bundle.getSerializable("producto");
+                    savedProductos = p;
+                    id = p.get_ID();
+                    Log.i("idproducto", String.valueOf(p.get_ID()));
+                    txtMarca.setText(p.getMarca());
+                    txtDescripcion.setText(p.getDescripcion());
+                    String pre = String.valueOf(p.getPrecio());
+                    txtPrecio.setText(pre);
+                    //imageView.setImageURI(Uri.parse(p.getFoto()));
+                    Picasso.get().load(p.getFoto()).into(imageView);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+    }
+
+    private void limpiar() {
         savedProductos = null;
         txtMarca.setText("");
         txtDescripcion.setText("");
@@ -141,45 +198,76 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         Picasso.get().load(R.drawable.com).into(imageView);
     }
 
-    /*private void openGalery(){
+    private void cargarimg() {
+
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-        startActivityForResult(intent.createChooser(intent,"Seleccionar"),0);
-    }*/
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Imagen"), 2);
+        // startActivityForResult(Intent.createChooser(intent, "Select Imagen"), 1);
+    }
 
-    private String convert(){
-        if (imgUri == null && savedProductos.getFoto() == null){
-            return Uri.parse("android.resource://com.example.electronicaws/" + R.drawable.com).toString();
+    private String imgsrc() {
+        if (imgUri == null && savedProductos.getFoto() == null) {
+            return Uri.parse("android.resource://com.example.electronicaws" + R.drawable.com).toString();
         }
-        if (imgUri == null){
-            savedProductos.getFoto();
+        if (imgUri == null) {
+            return savedProductos.getFoto();
         }
         return imgUri.toString();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        Log.i("Intent de itemSeleccionado:",intent.getExtras().toString());
-        if (intent != null) {
-            Bundle bundle = intent.getExtras();
-            if (resultCode == Activity.RESULT_OK){
-                Productos p = (Productos) bundle.getSerializable("producto");
-                savedProductos = p;
-                id = p.get_ID();
-                Log.i("idproducto", String.valueOf(p.get_ID()));
-                txtMarca.setText(p.getMarca());
-                txtDescripcion.setText(p.getDescripcion());
-                String pre = String.valueOf(p.getPrecio());
-                txtPrecio.setText(pre);
-                //imageView.setImageURI(Uri.parse(p.getFoto()));
-                Picasso.get().load(p.getFoto()).into(imageView);
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-            }
-        }
+    public String getStringImagen(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        //Log.i("Parametro:", encodedImage);
+        return encodedImage;
     }
 
+    public void actualizar(String URL) throws JSONException {
+        //conseguir el path de la img
+        String imagen = getStringImagen(bitmap);
+        // En este metodo se hace el envio de valores de la aplicacion al servidor
+        //Log.i("url", URL);
+        StringRequest request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.equals("Exito")) {
+                    Toast.makeText(ItemSeleccionado.this, "Producto actualizado", Toast.LENGTH_LONG).show();
+                    limpiar();
+                } else if (response.equals("Error")){
+                    Toast.makeText(ItemSeleccionado.this, "queyafuncione", Toast.LENGTH_SHORT).show();
+                    limpiar();
+                }
+                else
+                {
+                    Log.i("url", URL);
+                    Toast.makeText(ItemSeleccionado.this, "quechigadoses-.-", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(ItemSeleccionado.this, "ERROR AL REALIZAR LA CONEXION", Toast.LENGTH_LONG).show();
+            }
+
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("_ID", String.valueOf(id));
+                hashMap.put("marca", txtMarca.getText().toString().trim());
+                hashMap.put("descripcion", txtDescripcion.getText().toString().trim());
+                hashMap.put("precio", txtPrecio.getText().toString().trim());
+                hashMap.put("foto",getStringImagen(bitmap)); //passing bitmap for converting into String
+                Log.i("Parametros", String.valueOf(hashMap));
+                return hashMap;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(ItemSeleccionado.this);
+        requestQueue.add(request);
+
+    }
 }
