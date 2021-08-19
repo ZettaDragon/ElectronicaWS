@@ -22,12 +22,10 @@ import android.widget.Toast;
 
 import com.example.electronicaws.Objetos.ProcesosPHP;
 import com.example.electronicaws.Objetos.Productos;
+import com.squareup.picasso.Picasso;
 
 public class ItemSeleccionado extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView lblMarca;
-    private TextView lblDescripcion;
-    private TextView lblPrecio;
     private EditText txtMarca;
     private EditText txtDescripcion;
     private EditText txtPrecio;
@@ -40,11 +38,13 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     ProcesosPHP php;
     private int id;
     private Uri imgUri;
+    private String msg = "Entro a esta parte";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_seleccionado);
+        Log.i("mensaje de inicio",msg);
         iniciar();
         setEvents();
     }
@@ -52,9 +52,6 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     public void iniciar(){
         this.php = new ProcesosPHP();
         php.setContext(this);
-        lblMarca = findViewById(R.id.lblTitulo);
-        lblDescripcion = findViewById(R.id.lblDescripcion);
-        lblPrecio = findViewById(R.id.lblPrecio);
         txtMarca = findViewById(R.id.txtMarca);
         txtDescripcion = findViewById(R.id.txtDescripcion);
         txtPrecio = findViewById(R.id.txtPrecio);
@@ -90,16 +87,37 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
                     }
                     break;
                 case R.id.btnBorrar:
-                    /*php.borrarProductosWS(sproductos.get_ID());
-                    Log.i("ID", String.valueOf(sproductos.get_ID()));
-                    Toast.makeText(getApplicationContext(), "Producto eliminado con exito", Toast.LENGTH_SHORT).show();*/
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(ItemSeleccionado.this);
+                    builder1.setMessage("Desea borrar el registro?");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Si",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int identificador) {
+                                    php.borrarProductosWS(id);
+                                    Toast.makeText(getApplicationContext(), "Producto Eliminado", Toast.LENGTH_SHORT).show();
+                                    limpiar();
+                                }
+                            });
+
+                    builder1.setNegativeButton(
+                            "No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
                     break;
                 case R.id.btnRegresar:
-                    Intent i = new Intent(ItemSeleccionado.this, ListActivity.class);
+                    Intent i = new Intent(ItemSeleccionado.this, ListaActivity.class);
                     startActivityForResult(i,0);
                     break;
                 case R.id.btnSelectFoto:
-                    openGalery();
+                    //openGalery();
                     break;
 
             }
@@ -114,12 +132,21 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         return ni != null && ni.isConnected();
     }
 
-    private void openGalery(){
+    private void limpiar()
+    {
+        savedProductos = null;
+        txtMarca.setText("");
+        txtDescripcion.setText("");
+        txtPrecio.setText("");
+        Picasso.get().load(R.drawable.com).into(imageView);
+    }
+
+    /*private void openGalery(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(intent.createChooser(intent,"Seleccionar"),0);
-    }
+    }*/
 
     private String convert(){
         if (imgUri == null && savedProductos.getFoto() == null){
@@ -131,19 +158,23 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         return imgUri.toString();
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        Log.i("Intent de itemSeleccionado:",intent.getExtras().toString());
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            if (Activity.RESULT_OK == resultCode){
+            if (resultCode == Activity.RESULT_OK){
                 Productos p = (Productos) bundle.getSerializable("producto");
                 savedProductos = p;
                 id = p.get_ID();
+                Log.i("idproducto", String.valueOf(p.get_ID()));
                 txtMarca.setText(p.getMarca());
                 txtDescripcion.setText(p.getDescripcion());
                 String pre = String.valueOf(p.getPrecio());
                 txtPrecio.setText(pre);
-                imageView.setImageURI(Uri.parse(p.getFoto()));
+                //imageView.setImageURI(Uri.parse(p.getFoto()));
+                Picasso.get().load(p.getFoto()).into(imageView);
             }
             else{
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();

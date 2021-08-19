@@ -2,7 +2,6 @@ package com.example.electronicaws;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
@@ -35,7 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ListaActivity extends ListActivity  implements Response.Listener<JSONObject>,Response.ErrorListener{
+public class ListaActivity extends ListActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     private final Context context = this;
     private ProcesosPHP php = new ProcesosPHP();
@@ -58,7 +57,6 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
 
     public void consultarProductos(){
         String url = serverip + "wsConsultarProductos.php";
-        Log.i("url",url);
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url,null,this,this);
         requestQueue.add(jsonObjectRequest);
     }
@@ -83,7 +81,6 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
                 productos.setFoto(jsonObject.optString("foto"));
                 productos.setPrecio(jsonObject.optDouble("precio"));
                 listaProductos.add(productos);
-                Log.i("Lista",listaProductos.toString());
             }
             MyArrayAdapter adapter = new MyArrayAdapter(context,R.layout.layout_productos,listaProductos);
             setListAdapter(adapter);
@@ -103,8 +100,10 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
             this.context = context;
             this.textViewRecursoId = textViewResourceId;
             this.objects = objects;
+
         }
 
+        @Override
         public View getView(final int position, View convertView, ViewGroup viewGroup){
 
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -128,13 +127,16 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
                 public void onClick(View v) {
                     Bundle oBundle = new Bundle();
                     oBundle.putSerializable("producto", objects.get(position));
-                    Intent i = new Intent(context,ItemSeleccionado.class);
-                    i.putExtras(oBundle);
-                    setResult(RESULT_OK, i);
+
+                    Intent intento = new Intent();
+                    intento.putExtras(oBundle);
+                    setResult(Activity.RESULT_OK,intento);
                     finish();
+
                 }
             });
             return view;
+
         }
 
     }

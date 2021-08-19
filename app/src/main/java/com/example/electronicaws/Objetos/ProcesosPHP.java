@@ -21,7 +21,10 @@ public class ProcesosPHP implements Response.Listener<JSONObject>, Response.Erro
     private ArrayList<Productos> productos = new ArrayList<Productos>();
     private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
 
-    public void setContext(Context context){requestQueue = Volley.newRequestQueue(context); }
+    public void setContext (Context context)
+    {
+        requestQueue = Volley.newRequestQueue(context);
+    }
 
 
     //Procesos PHP para los productos
@@ -35,18 +38,9 @@ public class ProcesosPHP implements Response.Listener<JSONObject>, Response.Erro
     }
     public void borrarProductosWS(int id)
     {
-        String url = serverip + "wsEliminarProductos.php=_ID=" + id;
+        String url = serverip + "wsEliminarProductos.php?_ID=" + id;
         Log.i("url",url);
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url, null, this, this);
-        requestQueue.add(jsonObjectRequest);
-    }
-
-    public void validarUsuarioWS(Usuario usuario)
-    {
-        String url = serverip + "wsConsultarUsuarios.php?usuario=" + usuario.getUsuario() + "&pass" + usuario.getContraseña();
-        url = url.replace("","%20");
-        Log.i("url",url);
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,url,null,this,this);
         requestQueue.add(jsonObjectRequest);
     }
 

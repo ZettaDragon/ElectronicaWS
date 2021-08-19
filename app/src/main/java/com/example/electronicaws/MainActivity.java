@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "No existe ese registro.", Toast.LENGTH_SHORT).show();
                     limpiar();
                 } else if(response.equals("Exito")){
-                    Intent intent = new Intent (MainActivity.this, ListaActivity.class);
+                    Intent intent = new Intent (MainActivity.this, ItemSeleccionado.class);
                     limpiar();
                     startActivity(intent);
                     Toast.makeText(MainActivity.this, "Inicio de Sesion exitoso.", Toast.LENGTH_LONG).show();
