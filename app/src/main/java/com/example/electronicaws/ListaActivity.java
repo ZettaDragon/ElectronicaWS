@@ -27,6 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.electronicaws.Objetos.ProcesosPHP;
 import com.example.electronicaws.Objetos.Productos;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +53,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
         listaProductos = new ArrayList<Productos>();
         requestQueue = Volley.newRequestQueue(context);
         consultarProductos();
+
     }
 
     public void consultarProductos(){
@@ -81,6 +83,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
                 productos.setFoto(jsonObject.optString("foto"));
                 productos.setPrecio(jsonObject.optDouble("precio"));
                 listaProductos.add(productos);
+                Log.i("Lista",listaProductos.toString());
             }
             MyArrayAdapter adapter = new MyArrayAdapter(context,R.layout.layout_productos,listaProductos);
             setListAdapter(adapter);
@@ -118,7 +121,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
             String p = String.valueOf(objects.get(position).getPrecio());
             lblPrecio.setText(p);
             lblPrecio.setText("$" + p);
-            foto.setImageURI(Uri.parse(objects.get(position).getFoto()));
+            Picasso.get().load(objects.get(position).getFoto()).into(foto);
 
             btnVer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -127,7 +130,7 @@ public class ListaActivity extends ListActivity  implements Response.Listener<JS
                     oBundle.putSerializable("producto", objects.get(position));
                     Intent i = new Intent(context,ItemSeleccionado.class);
                     i.putExtras(oBundle);
-                    setResult(Activity.RESULT_OK, i);
+                    setResult(RESULT_OK, i);
                     finish();
                 }
             });

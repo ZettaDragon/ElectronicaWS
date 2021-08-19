@@ -14,12 +14,6 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp">
-        <!--<Button
-            android:id="@+id/btnNuevo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/nuevo"
-            android:layout_below="@id/btnNuevo"/>-->
         <TextView
             android:paddingTop="16dp"
             android:id="@+id/lblDisponibles"

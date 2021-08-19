@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent (MainActivity.this, ListaActivity.class);
                     limpiar();
                     startActivity(intent);
-                    Log.i("respuesta",response);
                     Toast.makeText(MainActivity.this, "Inicio de Sesion exitoso.", Toast.LENGTH_LONG).show();
                 }else
                 {
