@@ -41,7 +41,7 @@ public class ListaActivity extends ListActivity implements Response.Listener<JSO
     private RequestQueue requestQueue;
     private JsonObjectRequest jsonObjectRequest;
     private ArrayList<Productos> listaProductos;
-    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+    private String serverip = "http://electronicaws.ddns.net/WSElectronica/";
 
 
     @Override

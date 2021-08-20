@@ -19,7 +19,7 @@ public class ProcesosPHP implements Response.Listener<JSONObject>, Response.Erro
     private RequestQueue requestQueue;
     private JsonObjectRequest jsonObjectRequest;
     private ArrayList<Productos> productos = new ArrayList<Productos>();
-    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+    private String serverip = "http://electronicaws.ddns.net/WSElectronica/";
 
     public void setContext (Context context)
     {

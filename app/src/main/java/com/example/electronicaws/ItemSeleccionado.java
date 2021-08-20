@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -38,14 +39,30 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class ItemSeleccionado extends AppCompatActivity implements View.OnClickListener {
 
+    private static final Object URL = "";
     private EditText txtMarca;
     private EditText txtDescripcion;
     private EditText txtPrecio;
@@ -58,12 +75,17 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     ProcesosPHP php;
     private int id;
     private Uri imgUri;
-    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+    private String serverip = "http://electronicaws.ddns.net/WSElectronica/";
     private Bitmap bitmap;
+    StringRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         setContentView(R.layout.activity_item_seleccionado);
         iniciar();
         setEvents();
@@ -96,15 +118,12 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
             switch (v.getId()) {
                 case R.id.btnGuardar:
                     if (savedProductos != null) {
-                        String imagen = getStringImagen(bitmap);
-                        //String url = serverip + "wsActualizarProductos.php?_ID=" + id + "&marca=" + txtMarca.getText().toString() + "&descripcion=" + txtDescripcion.getText().toString() + "&foto=" + imagen+ "&precio=" +txtPrecio.getText().toString();
-                        String url = serverip + "wsActualizarProductos.php";
-                        try {
-                            actualizar(url);
+                        cargarWebService();
+                        /*try {
+                            prueba();
                         } catch (JSONException e) {
-                            Log.i("URL",url);
                             e.printStackTrace();
-                        }
+                        }*/
                     } else {
                         Toast.makeText(getApplicationContext(), "Debe seleccionar un registro primero", Toast.LENGTH_SHORT).show();
                     }
@@ -148,6 +167,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
             Toast.makeText(getApplicationContext(), "Se necesita tener conexion a internet", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public boolean isNetworkAvailable() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -222,52 +242,45 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        //Log.i("Parametro:", encodedImage);
         return encodedImage;
     }
 
-    public void actualizar(String URL) throws JSONException {
-        //conseguir el path de la img
-        String imagen = getStringImagen(bitmap);
-        // En este metodo se hace el envio de valores de la aplicacion al servidor
-        //Log.i("url", URL);
-        StringRequest request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+
+
+
+    private void cargarWebService()
+    {
+
+        String url = "http://electronicaws.ddns.net/WSElectronica/guardarImg.php";
+        request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if (response.equals("Exito")) {
-                    Toast.makeText(ItemSeleccionado.this, "Producto actualizado", Toast.LENGTH_LONG).show();
-                    limpiar();
-                } else if (response.equals("Error")){
-                    Toast.makeText(ItemSeleccionado.this, "queyafuncione", Toast.LENGTH_SHORT).show();
-                    limpiar();
-                }
-                else
+                if(response.equalsIgnoreCase("Registrado"))
                 {
-                    Log.i("url", URL);
-                    Toast.makeText(ItemSeleccionado.this, "quechigadoses-.-", Toast.LENGTH_SHORT).show();
+                    Log.i("Tipo:",response);
+                    Toast.makeText(ItemSeleccionado.this, response, Toast.LENGTH_LONG).show();
+                    limpiar();
+                }else{
+                    Log.i("Tipo2:",response);
+                    Toast.makeText(ItemSeleccionado.this, response, Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ItemSeleccionado.this, "ERROR AL REALIZAR LA CONEXION", Toast.LENGTH_LONG).show();
+                Toast.makeText(ItemSeleccionado.this, error.toString(), Toast.LENGTH_LONG).show();
             }
-
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("_ID", String.valueOf(id));
-                hashMap.put("marca", txtMarca.getText().toString().trim());
-                hashMap.put("descripcion", txtDescripcion.getText().toString().trim());
-                hashMap.put("precio", txtPrecio.getText().toString().trim());
-                hashMap.put("foto",getStringImagen(bitmap)); //passing bitmap for converting into String
-                Log.i("Parametros", String.valueOf(hashMap));
-                return hashMap;
+                String img = getStringImagen(bitmap);
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("foto",img);
+                return  parametros;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(ItemSeleccionado.this);
-        requestQueue.add(request);
-
+        RequestQueue newRequestQueue = Volley.newRequestQueue(ItemSeleccionado.this);
+        newRequestQueue.add(request);
     }
+
 }
