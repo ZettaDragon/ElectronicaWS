@@ -75,7 +75,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     ProcesosPHP php;
     private int id;
     private Uri imgUri;
-    private String serverip = "http://electronicaws.ddns.net/WSElectronica/";
+    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
     private Bitmap bitmap;
     StringRequest request;
 
@@ -202,6 +202,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
                     txtPrecio.setText(pre);
                     //imageView.setImageURI(Uri.parse(p.getFoto()));
                     Picasso.get().load(p.getFoto()).into(imageView);
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                 }
@@ -245,13 +246,10 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         return encodedImage;
     }
 
-
-
-
     private void cargarWebService()
     {
 
-        String url = "http://electronicaws.ddns.net/WSElectronica/wsActualizarProductos.php";
+        String url = "https://electronicaws.000webhostapp.com/WSElectronica/WSElectronica/wsActualizarProductos.php";
         request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
