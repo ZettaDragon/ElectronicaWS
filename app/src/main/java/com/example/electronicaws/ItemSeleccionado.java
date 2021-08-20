@@ -75,7 +75,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     ProcesosPHP php;
     private int id;
     private Uri imgUri;
-    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+    private String serverip = "http://192.168.0.1/WSElectronica/";
     private Bitmap bitmap;
     StringRequest request;
 
@@ -249,11 +249,11 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     private void cargarWebService()
     {
 
-        String url = "https://electronicaws.000webhostapp.com/WSElectronica/WSElectronica/wsActualizarProductos.php";
+        String url = "http://192.168.0.1/WSElectronica/wsActualizarProductos.php";
         request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response.equalsIgnoreCase("Registrado"))
+                if(response.equalsIgnoreCase("Producto Registrado!!!"))
                 {
                     Log.i("Tipo:",response);
                     Toast.makeText(ItemSeleccionado.this, response, Toast.LENGTH_LONG).show();

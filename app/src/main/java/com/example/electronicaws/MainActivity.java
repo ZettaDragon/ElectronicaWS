@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private JsonObjectRequest jsonObjectRequest;
     private Usuario usuario;
-    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+
+    private String serverip = "http://192.168.0.1/WSElectronica/";
     private String pass;
 
 
