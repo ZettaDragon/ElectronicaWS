@@ -119,11 +119,6 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
                 case R.id.btnGuardar:
                     if (savedProductos != null) {
                         cargarWebService();
-                        /*try {
-                            prueba();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }*/
                     } else {
                         Toast.makeText(getApplicationContext(), "Debe seleccionar un registro primero", Toast.LENGTH_SHORT).show();
                     }
@@ -220,7 +215,6 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     }
 
     private void cargarimg() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -228,19 +222,12 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         // startActivityForResult(Intent.createChooser(intent, "Select Imagen"), 1);
     }
 
-    private String imgsrc() {
-        if (imgUri == null && savedProductos.getFoto() == null) {
-            return Uri.parse("android.resource://com.example.electronicaws" + R.drawable.com).toString();
-        }
-        if (imgUri == null) {
-            return savedProductos.getFoto();
-        }
-        return imgUri.toString();
-    }
 
     public String getStringImagen(Bitmap bmp) {
+        //Comprimes y haces un bimpa con la extension jpeg
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        //asignas a un byte
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
@@ -248,7 +235,6 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
 
     private void cargarWebService()
     {
-
         String url = "http://192.168.0.1/WSElectronica/wsActualizarProductos.php";
         request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
@@ -271,7 +257,9 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                //para ecnriptar la imagen y retorna un string
                 String img = getStringImagen(bitmap);
+
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("_ID", String.valueOf(savedProductos.get_ID()));
                 parametros.put("marca",txtMarca.getText().toString());

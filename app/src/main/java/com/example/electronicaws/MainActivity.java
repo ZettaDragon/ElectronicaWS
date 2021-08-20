@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Inicio de Sesion exitoso.", Toast.LENGTH_LONG).show();
                 }else
                 {
+                    //Error 2
                     Toast.makeText(MainActivity.this, "Contraseña o usuario incorrectos", Toast.LENGTH_SHORT).show();
                     limpiar();
                 }
