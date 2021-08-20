@@ -251,7 +251,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     private void cargarWebService()
     {
 
-        String url = "http://electronicaws.ddns.net/WSElectronica/guardarImg.php";
+        String url = "http://electronicaws.ddns.net/WSElectronica/wsActualizarProductos.php";
         request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -275,6 +275,10 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
             protected Map<String, String> getParams() throws AuthFailureError {
                 String img = getStringImagen(bitmap);
                 Map<String,String> parametros = new HashMap<>();
+                parametros.put("_ID", String.valueOf(savedProductos.get_ID()));
+                parametros.put("marca",txtMarca.getText().toString());
+                parametros.put("descripcion",txtDescripcion.getText().toString());
+                parametros.put("precio",txtPrecio.getText().toString());
                 parametros.put("foto",img);
                 return  parametros;
             }
