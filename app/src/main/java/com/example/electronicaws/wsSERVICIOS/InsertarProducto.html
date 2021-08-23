@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Insertar Productos</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/Style.css">
+	//<script type="text/javascript" src="js/app.js"></script>
+</head>
+<body>
+<h1>Formulario para ingresar productos</h1>
+<form action="php/wsRegistroProductos.php" method="post" enctype="multipart/form-data" class="form-register" >
+	<h2 class="form-titulo">Producto a guardar</h2>
+	<div class="contenedor-inputs">
+		<input type="text" id="marca" name="marca" placeholder="Marca" class="input-48" required>
+		<input type="text" id="descripcion" name="descripcion" placeholder="Descripcion" class="input-48" required>
+        <input type="text" id="precio" name="precio" placeholder="Precio" class="input-48" required>
+        <input type="file" name="foto" class="file-custom"/>
+        
+		<button type="submit" >Guardar</button>
+        <button type="reset" class="cancelbtn">Limpiar</button>
+		<a type="submit"class="btnsalir" href="/Index.html"> Volver Atrás</a>
+	</div>
+</form>
+	
+</body>
+</html>

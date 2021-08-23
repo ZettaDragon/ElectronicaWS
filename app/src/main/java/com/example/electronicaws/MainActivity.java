@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private JsonObjectRequest jsonObjectRequest;
     private Usuario usuario;
-    private String serverip = "https://electronicaws.000webhostapp.com/WSElectronica/";
+
+    private String serverip = "http://192.168.0.1/WSElectronica/";
     private String pass;
 
 
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Inicio de Sesion exitoso.", Toast.LENGTH_LONG).show();
                 }else
                 {
+                    //Error 2
                     Toast.makeText(MainActivity.this, "Contraseña o usuario incorrectos", Toast.LENGTH_SHORT).show();
                     limpiar();
                 }

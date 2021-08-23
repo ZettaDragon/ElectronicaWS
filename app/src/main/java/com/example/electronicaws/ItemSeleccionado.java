@@ -249,7 +249,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
     private void cargarWebService()
     {
 
-        String url = "https://electronicaws.000webhostapp.com/WSElectronica/wsActualizarProductos.php";
+        String url = "https://electronicaws.000webhostapp.com/WSElectronica/WSElectronica/wsActualizarProductos.php";
         request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -277,7 +277,7 @@ public class ItemSeleccionado extends AppCompatActivity implements View.OnClickL
                 parametros.put("marca",txtMarca.getText().toString());
                 parametros.put("descripcion",txtDescripcion.getText().toString());
                 parametros.put("precio",txtPrecio.getText().toString());
-                //parametros.put("foto",img);
+                parametros.put("foto",img);
                 return  parametros;
             }
         };
